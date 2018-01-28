@@ -5,8 +5,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
+        <groupId>com.khanchych.online_learning.coursera.algorythm</groupId>
         <artifactId>homework</artifactId>
-        <groupId>com.khanchych.algorithm</groupId>
         <version>1.0</version>
     </parent>
 
