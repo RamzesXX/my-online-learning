@@ -8,27 +8,28 @@ import java.util.*;
  */
 public class Solver {
 
-    private static class Item {
-
+    static class Item {
         private int value;
         private int weight;
 
-        public Item(int value, int weight) {
+        Item(int value, int weight) {
             this.value = value;
             this.weight = weight;
         }
     }
 
-    private static class Node<T> {
+    static class Node<T> {
         int level;
-        Node<T> parent;
-        Node<T> left;
-        Node<T> right;
         T value;
+        int[] taken;
+
+        Node(int level, T value) {
+            this.level = level;
+            this.value = value;
+        }
     }
 
-    private static class BBNode {
-
+    static class BBNode {
         int potential;
         int capacity;
         int value;
@@ -62,7 +63,7 @@ public class Solver {
             if (arg.startsWith("-file=")) {
                 loadInputData(arg.substring(6));
                 int[] solution =
-                    capacity < 100_001 ? fillKnapsackDynamicProgramingAlgorithm() : fillKnapsackBranchAndBounds();
+                        (long) n * capacity < 100_000_000L ? fillKnapsackDynamicProgramingAlgorithm() : fillKnapsackBranchAndBounds();
                 print(solution);
 
                 return;
@@ -81,7 +82,6 @@ public class Solver {
             for (int i = 0; i < n; i++) {
                 items[i] = new Item(scanner.nextInt(), scanner.nextInt());
             }
-            Arrays.sort(items, Comparator.comparingDouble(item -> (-1.0d * item.value / item.weight)));
         }
     }
 
@@ -100,55 +100,65 @@ public class Solver {
     }
 
     int[] fillKnapsackBranchAndBounds() {
-        int[] taken = new int[n];
-        Node<BBNode> root = new Node<>();
-        Node<BBNode> current, best;
-        int optimisticValue = Arrays.stream(items).mapToInt(item -> item.value).sum();
-
-        root.value = new BBNode(optimisticValue, capacity, 0);
-        root.level = -1;
-        best = current = root;
-
-
-
-        if (best.value.value < current.value.potential) {
-            Node<BBNode> newNode = new Node<>();
-            newNode.parent = current;
-            newNode.level = current.level + 1;
-            if (current.value.capacity - items[newNode.level].weight >= 0) {
-                newNode.value = new BBNode(current.value.potential,
-                    current.value.capacity - items[newNode.level].weight,
-                    current.value.value + items[newNode.level].value);
-                current.left = newNode;
-                current = newNode;
-            } else {
-                newNode.value = new BBNode(current.value.potential - items[newNode.level].value, current.value.capacity,
-                    current.value.value);
-                current.right = newNode;
-                current = newNode;
-
-                newNode = new Node();
-                newNode.parent = current.parent;
-                newNode.level = current.level;
-                newNode.value = new BBNode(current.value.potential,
-                    current.value.capacity - items[newNode.level].weight,
-                    current.value.value + items[newNode.level].value);
-                current.parent.left = newNode;
-            }
-
-            if (current.value.potential == current.value.value) {
-                if (best.value.value < current.value.value) {
-                    best = current;
-                }
-            }
+        int maxValue = Arrays.stream(items).mapToInt(item -> item.value).sum();
+        BBNode start = new BBNode(maxValue, capacity, 0);
+        Node<BBNode> startNode = new Node<>(-1, start);
+        Node<BBNode> bestNode = new Node<>(-1, start);
+        Node<BBNode>[] nodes = (Node<BBNode>[]) new Node[capacity];
+        for (int i = 0; i < n; i++) {
+            nodes[i] = new Node<>(i, new BBNode(0, 0, 0));
         }
 
-        return taken;
+        return getBest(startNode, bestNode, new int[n], nodes).taken;
     }
 
-    Node<BBNode> getBest(Node<BBNode> root, Node<BBNode> best) {
+    Node<BBNode> getBest(Node<BBNode> current, Node<BBNode> best, int[] currentVariant, Node<BBNode>[] nodes) {
+        Node<BBNode> newNode;
+        int newLevel = current.level + 1;
+
+        if (current.value.capacity < 0 || best.value.value > current.value.potential) {
+            return best;
+        }
+
+        if (current.value.potential == current.value.value) {
+            if (best.value.value < current.value.value) {
+                best.level = current.level;
+
+                best.value.capacity = current.value.capacity;
+                best.value.value = current.value.value;
+                best.value.potential = current.value.potential;
+
+                best.taken = Arrays.copyOf(currentVariant, capacity);
+            }
+            return best;
+        }
+
+        if (current.value.capacity - items[newLevel].weight >= 0) {
+            newNode = nodes[newLevel];
+
+            newNode.value.potential = current.value.potential;
+            newNode.value.capacity = current.value.capacity - items[newLevel].weight;
+            newNode.value.value = current.value.value + items[newLevel].value;
+
+            currentVariant[newLevel] = 1;
+            best = getBest(newNode, best, currentVariant, nodes);
+        }
+
+        if (current.value.potential - items[newLevel].value > best.value.value) {
+
+            newNode = nodes[newLevel];
+
+            newNode.value.potential = current.value.potential - items[newLevel].value;
+            newNode.value.capacity = current.value.capacity;
+            newNode.value.value = current.value.value;
+
+            currentVariant[newNode.level] = 0;
+            best = getBest(newNode, best, currentVariant, nodes);
+        }
+
         return best;
     }
+
 
     // a trivial greedy algorithm for filling the knapsack
     // it takes n in-order until the knapsack is full
@@ -166,7 +176,7 @@ public class Solver {
                 int currentValue = calcValue(optimalSolutions.getOrDefault(newWeight, new ArrayList<>()));
 
                 if ((newWeight <= capacity) && (!optimalSolutions.containsKey(newWeight) || (newValue
-                    > currentValue))) {
+                        > currentValue))) {
                     List<Integer> list = new ArrayList<>(entry.getValue());
                     list.add(i);
                     partialSolutions.put(newWeight, list);
@@ -177,8 +187,8 @@ public class Solver {
         }
 
         optimalSolutions.values().stream()
-            .max(Comparator.comparingInt(this::calcValue)).orElse(new ArrayList<>())
-            .forEach(i -> taken[i] = 1);
+                .max(Comparator.comparingInt(this::calcValue)).orElse(new ArrayList<>())
+                .forEach(i -> taken[i] = 1);
         return taken;
     }
 
