@@ -7,7 +7,9 @@ import java.util.*;
  * The class <code>Solver</code> is an implementation of a greedy algorithm to solve the knapsack problem.
  */
 public class Solver {
-    static class Item {
+
+    private static class Item {
+
         private int value;
         private int weight;
 
@@ -17,7 +19,16 @@ public class Solver {
         }
     }
 
-    static class BBNode {
+    private static class Node<T> {
+        int level;
+        Node<T> parent;
+        Node<T> left;
+        Node<T> right;
+        T value;
+    }
+
+    private static class BBNode {
+
         int potential;
         int capacity;
         int value;
@@ -26,18 +37,6 @@ public class Solver {
             this.potential = potential;
             this.capacity = capacity;
             this.value = value;
-        }
-
-        public int getPotential() {
-            return potential;
-        }
-
-        public int getCapacity() {
-            return capacity;
-        }
-
-        public int getValue() {
-            return value;
         }
     }
 
@@ -58,11 +57,12 @@ public class Solver {
     /**
      * Read the instance, solve it, and print the solution in the standard output
      */
-    private void solve(String[] args) throws IOException {
+    void solve(String[] args) throws IOException {
         for (String arg : args) {
             if (arg.startsWith("-file=")) {
                 loadInputData(arg.substring(6));
-                int[] solution = capacity < 100_001 ? fillKnapsackDynamicProgramingAlgorithm() : fillKnapsackBranchAndBounds();
+                int[] solution =
+                    capacity < 100_001 ? fillKnapsackDynamicProgramingAlgorithm() : fillKnapsackBranchAndBounds();
                 print(solution);
 
                 return;
@@ -70,7 +70,7 @@ public class Solver {
         }
     }
 
-    private void loadInputData(String fileName) throws IOException {
+    void loadInputData(String fileName) throws IOException {
         try (BufferedReader input = new BufferedReader(new FileReader(fileName))) {
             Scanner scanner = new Scanner(input);
 
@@ -81,12 +81,13 @@ public class Solver {
             for (int i = 0; i < n; i++) {
                 items[i] = new Item(scanner.nextInt(), scanner.nextInt());
             }
-            Arrays.sort(items, Comparator.comparingDouble(item -> ( -1.0d * item.value / item.weight)));
+            Arrays.sort(items, Comparator.comparingDouble(item -> (-1.0d * item.value / item.weight)));
         }
     }
+
     // a trivial greedy algorithm for filling the knapsack
     // it takes n in-order until the knapsack is full
-    private int[] fillKnapsackGreedyAlgorithm() {
+    int[] fillKnapsackGreedyAlgorithm() {
         int weight = 0;
         int[] taken = new int[n];
 
@@ -98,17 +99,60 @@ public class Solver {
         return taken;
     }
 
-    private int[] fillKnapsackBranchAndBounds() {
+    int[] fillKnapsackBranchAndBounds() {
         int[] taken = new int[n];
+        Node<BBNode> root = new Node<>();
+        Node<BBNode> current, best;
+        int optimisticValue = Arrays.stream(items).mapToInt(item -> item.value).sum();
+
+        root.value = new BBNode(optimisticValue, capacity, 0);
+        root.level = -1;
+        best = current = root;
 
 
+
+        if (best.value.value < current.value.potential) {
+            Node<BBNode> newNode = new Node<>();
+            newNode.parent = current;
+            newNode.level = current.level + 1;
+            if (current.value.capacity - items[newNode.level].weight >= 0) {
+                newNode.value = new BBNode(current.value.potential,
+                    current.value.capacity - items[newNode.level].weight,
+                    current.value.value + items[newNode.level].value);
+                current.left = newNode;
+                current = newNode;
+            } else {
+                newNode.value = new BBNode(current.value.potential - items[newNode.level].value, current.value.capacity,
+                    current.value.value);
+                current.right = newNode;
+                current = newNode;
+
+                newNode = new Node();
+                newNode.parent = current.parent;
+                newNode.level = current.level;
+                newNode.value = new BBNode(current.value.potential,
+                    current.value.capacity - items[newNode.level].weight,
+                    current.value.value + items[newNode.level].value);
+                current.parent.left = newNode;
+            }
+
+            if (current.value.potential == current.value.value) {
+                if (best.value.value < current.value.value) {
+                    best = current;
+                }
+            }
+        }
 
         return taken;
     }
 
+    Node<BBNode> getBest(Node<BBNode> root, Node<BBNode> best) {
+        return best;
+    }
+
     // a trivial greedy algorithm for filling the knapsack
     // it takes n in-order until the knapsack is full
-    private int[] fillKnapsackDynamicProgramingAlgorithm() {
+    int[] fillKnapsackDynamicProgramingAlgorithm() {
         Map<Integer, List<Integer>> optimalSolutions = new HashMap<>();
         int[] taken = new int[n];
 
@@ -121,7 +165,8 @@ public class Solver {
                 int newValue = calcValue(entry.getValue()) + items[i].value;
                 int currentValue = calcValue(optimalSolutions.getOrDefault(newWeight, new ArrayList<>()));
 
-                if ((newWeight <= capacity) && (!optimalSolutions.containsKey(newWeight) || (newValue > currentValue))){
+                if ((newWeight <= capacity) && (!optimalSolutions.containsKey(newWeight) || (newValue
+                    > currentValue))) {
                     List<Integer> list = new ArrayList<>(entry.getValue());
                     list.add(i);
                     partialSolutions.put(newWeight, list);
@@ -132,16 +177,16 @@ public class Solver {
         }
 
         optimalSolutions.values().stream()
-                .max(Comparator.comparingInt(this::calcValue)).orElse(new ArrayList<>())
-                .forEach(i -> taken[i] = 1);
+            .max(Comparator.comparingInt(this::calcValue)).orElse(new ArrayList<>())
+            .forEach(i -> taken[i] = 1);
         return taken;
     }
 
-    private int calcValue(List<Integer> items) {
+    int calcValue(List<Integer> items) {
         return items.stream().mapToInt(item -> this.items[item].value).sum();
     }
 
-    private void print(int[] taken) {
+    void print(int[] taken) {
         int value = 0;
         StringBuilder builder = new StringBuilder();
 
