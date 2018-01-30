@@ -7,28 +7,41 @@
 public class WellFormedParentheses {
 
     public int solve(String input) {
-        int sum = 0;
-        int start = 0;
         int best = 0;
 
-        for (int i = 0; i < input.length(); i++) {
-            sum += '(' == input.charAt(i) ? 1 : -1;
-            if (sum < 0) {
-                sum++;
-                start++;
-                best = Math.max(best, i - start);
-            }
-        }
-
-        while (sum > 0) {
-            sum--;
-            start++;
-        }
-
-        best = Math.max(best, input.length() - start);
+        best = getBest(input, best);
+        best = getBest(flip(input), best);
 
         return best;
     }
 
+    private int getBest(String input, int best) {
+        int sum = 0;
+        int start = 0;
 
+        for (int i = start; i < input.length(); i++) {
+            sum += '(' == input.charAt(i) ? 1 : -1;
+            if (sum < 0) {
+                sum = 0;
+                best = Math.max(best, i - start);
+                start = i+1;
+            }
+        }
+
+        if (sum == 0) {
+            best = Math.max(best, input.length() - start);
+        }
+
+        return best;
+    }
+
+    private String flip(String input) {
+        StringBuilder result = new StringBuilder(input.length());
+
+        for (int i = input.length() - 1; i >=0 ; i--) {
+            result.append('(' == input.charAt(i) ? ')' :'(');
+        }
+
+        return result.toString();
+    }
 }
