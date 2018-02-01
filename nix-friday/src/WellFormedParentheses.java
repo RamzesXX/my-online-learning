@@ -24,7 +24,7 @@ public class WellFormedParentheses {
             if (sum < 0) {
                 sum = 0;
                 best = Math.max(best, i - start);
-                start = i+1;
+                start = i + 1;
             }
         }
 
@@ -38,8 +38,8 @@ public class WellFormedParentheses {
     private String flip(String input) {
         StringBuilder result = new StringBuilder(input.length());
 
-        for (int i = input.length() - 1; i >=0 ; i--) {
-            result.append('(' == input.charAt(i) ? ')' :'(');
+        for (int i = input.length() - 1; i >= 0; i--) {
+            result.append('(' == input.charAt(i) ? ')' : '(');
         }
 
         return result.toString();
