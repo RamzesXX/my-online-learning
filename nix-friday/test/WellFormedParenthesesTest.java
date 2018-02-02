@@ -61,4 +61,9 @@ public class WellFormedParenthesesTest {
     public void solveTest7() {
         assertEquals(2, wellFormedParentheses.solve("()(()"));
     }
+
+    @Test
+    public void solveTest8() {
+        assertEquals(10, wellFormedParentheses.solve(")()(((())))("));
+    }
 }

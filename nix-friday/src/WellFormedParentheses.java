@@ -9,10 +9,7 @@ public class WellFormedParentheses {
     public int solve(String input) {
         int best = 0;
 
-        best = getBest(input, best);
-        best = getBest(flip(input), best);
-
-        return best;
+        return getBest(input, best);
     }
 
     private int getBest(String input, int best) {
@@ -21,27 +18,15 @@ public class WellFormedParentheses {
 
         for (int i = start; i < input.length(); i++) {
             sum += '(' == input.charAt(i) ? 1 : -1;
+            if (sum == 0) {
+                best = Math.max(best, i - start+1);
+            }
             if (sum < 0) {
                 sum = 0;
-                best = Math.max(best, i - start);
                 start = i + 1;
             }
         }
 
-        if (sum == 0) {
-            best = Math.max(best, input.length() - start);
-        }
-
         return best;
-    }
-
-    private String flip(String input) {
-        StringBuilder result = new StringBuilder(input.length());
-
-        for (int i = input.length() - 1; i >= 0; i--) {
-            result.append('(' == input.charAt(i) ? ')' : '(');
-        }
-
-        return result.toString();
     }
 }
