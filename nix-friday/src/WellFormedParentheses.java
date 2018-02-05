@@ -14,17 +14,32 @@ public class WellFormedParentheses {
 
     private int getBest(String input, int best) {
         int sum = 0;
-        int start = 0;
+        int length = 0;
+        int prevBest = 0;
 
-        for (int i = start; i < input.length(); i++) {
-            sum += '(' == input.charAt(i) ? 1 : -1;
-            if (sum == 0) {
-                best = Math.max(best, i - start+1);
+        for (int i = 0; i < input.length(); i++) {
+            if ('(' == input.charAt(i)) {
+                sum++;
+            } else {
+                sum--;
+
+                if (sum < 0) {
+                    sum = length = 0;
+                    prevBest = best;
+                } else {
+                    if (sum == 0) {
+                        prevBest = best;
+                    }
+                    length += 2;
+                    if (best < length) {
+                        best = length;
+                    }
+                }
             }
-            if (sum < 0) {
-                sum = 0;
-                start = i + 1;
-            }
+        }
+
+        if (prevBest < (best - 2 * sum)) {
+            best -= 2 * sum;
         }
 
         return best;
