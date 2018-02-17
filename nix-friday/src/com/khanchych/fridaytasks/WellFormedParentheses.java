@@ -20,20 +20,21 @@ public class WellFormedParentheses {
         for (int i = 0; i < input.length(); i++) {
             if ('(' == input.charAt(i)) {
                 sum++;
-            } else {
-                sum--;
+                continue;
+            }
 
-                if (sum < 0) {
-                    sum = length = 0;
+            sum--;
+
+            if (sum < 0) {
+                sum = length = 0;
+                prevBest = best;
+            } else {
+                if (sum == 0) {
                     prevBest = best;
-                } else {
-                    if (sum == 0) {
-                        prevBest = best;
-                    }
-                    length += 2;
-                    if (best < length) {
-                        best = length;
-                    }
+                }
+                length += 2;
+                if (best < length) {
+                    best = length;
                 }
             }
         }
