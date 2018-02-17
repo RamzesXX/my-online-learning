@@ -1,3 +1,5 @@
+package com.khanchych.fridaytasks;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,7 +27,8 @@ public class MOUCache<K, V> {
     }
 
     public void put(K key, V value) {
-        Node<K, V> tmp, node;
+        Node<K, V> tmp;
+        Node<K, V> node;
 
         node = new Node<>();
         node.data = value;
@@ -59,7 +62,9 @@ public class MOUCache<K, V> {
 
 
     public V get(K key) {
-        Node<K, V> node, prev, next;
+        Node<K, V> node;
+        Node<K, V> prev;
+        Node<K, V> next;
 
         if (!storage.containsKey(key)) {
             return null;
