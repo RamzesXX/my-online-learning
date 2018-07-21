@@ -1,3 +1,5 @@
+package com.khanchych.fridaytasks;
+
 import static junit.framework.TestCase.assertEquals;
 
 import org.junit.Before;

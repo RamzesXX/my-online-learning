@@ -1,4 +1,4 @@
-//Given a string containing just the characters ‘(’ and ‘)’, find the length of the longest valid (well-formed) parentheses substring.
+package com.khanchych.fridaytasks;//Given a string containing just the characters ‘(’ and ‘)’, find the length of the longest valid (well-formed) parentheses substring.
 //
 //    For “(()“, the longest valid parentheses substring is “()“, which has length = 2.
 //
@@ -20,20 +20,21 @@ public class WellFormedParentheses {
         for (int i = 0; i < input.length(); i++) {
             if ('(' == input.charAt(i)) {
                 sum++;
-            } else {
-                sum--;
+                continue;
+            }
 
-                if (sum < 0) {
-                    sum = length = 0;
+            sum--;
+
+            if (sum < 0) {
+                sum = length = 0;
+                prevBest = best;
+            } else {
+                if (sum == 0) {
                     prevBest = best;
-                } else {
-                    if (sum == 0) {
-                        prevBest = best;
-                    }
-                    length += 2;
-                    if (best < length) {
-                        best = length;
-                    }
+                }
+                length += 2;
+                if (best < length) {
+                    best = length;
                 }
             }
         }

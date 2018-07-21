@@ -1,3 +1,5 @@
+package com.khanchych.fridaytasks;
+
 import static org.junit.Assert.assertArrayEquals;
 
 import org.junit.Before;
