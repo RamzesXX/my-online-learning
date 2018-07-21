@@ -1,4 +1,7 @@
 package com.khanchych.friday;
+/** Path finder for game
+ * http://www.coolmath-games.com/0-bloxorz
+ */
 
 import java.util.*;
 import java.util.stream.Collectors;
