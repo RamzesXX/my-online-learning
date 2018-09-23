@@ -7,25 +7,18 @@ import java.util.Map;
 
 /**
  * This class is solver task about knapsack using dynamic programming
- *
- *
  */
 
-public class KnapsackDP {
+public class KnapsackDP implements Knapsack {
 
-    private Table<WorkingTableItem> workingTable;
-    private List<Item> items;
-    private int capacity;
-
-    public KnapsackDP(List<Item> items, int capacity) {
-        this.items = items;
-        this.capacity = capacity;
-        solve();
+    @Override
+    public List<Item> solve(ProblemInput input) {
+        return solve(input.getItems(), input.getCapacity());
     }
 
-
-    protected void solve() {
-        workingTable = new Table<>();
+    @Override
+    public List<Item> solve(List<Item> items, int capacity) {
+        Table<WorkingTableItem> workingTable = new Table<>();
 
         for (int itemIndex = 0; itemIndex < items.size(); itemIndex++) {
             Item item = items.get(itemIndex);
@@ -55,20 +48,22 @@ public class KnapsackDP {
                 workingTable.setItem(itemIndex, k, tableItem);
             }
         }
+
+        return getSolution(workingTable, items, capacity);
     }
 
-    public List<Integer> getSolution() {
-        List<Integer> solution = new ArrayList<>();
+    private List<Item> getSolution(Table<WorkingTableItem> workingTable, List<Item> items, int capacity) {
+        List<Item> solution = new ArrayList<>();
         int k = workingTable.getItem(items.size() - 1, capacity).weight;
-        for (int i = items.size()-1; i >=0; i--) {
+        for (int i = items.size() - 1; i >= 0; i--) {
             int prevValue = i > 0 ? workingTable.getItem(i - 1, k).value : 0;
             int curValue = workingTable.getItem(i, k).value;
 
             if (prevValue < curValue) {
                 k -= items.get(i).getWeight();
-                solution.add(i);
+                solution.add(items.get(i));
             }
-            if (k<=0) {
+            if (k <= 0) {
                 return solution;
             }
         }
@@ -77,6 +72,7 @@ public class KnapsackDP {
     }
 
     private static class Table<T> {
+
         private Map<String, T> workingTable;
 
         Table() {

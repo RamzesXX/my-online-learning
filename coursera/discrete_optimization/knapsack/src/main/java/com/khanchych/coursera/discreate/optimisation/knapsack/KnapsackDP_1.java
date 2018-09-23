@@ -10,33 +10,20 @@ import java.util.stream.Stream;
  * but the one is saving memory by using array for last table's row
  */
 
-public class KnapsackDP_1 {
+public class KnapsackDP_1 implements Knapsack {
 
-    private List<TableItem> tableRow;
-    private List<Item> items;
-    private int capacity;
-
-    public KnapsackDP_1(List<Item> items, int capacity) {
-        this.items = items;
-        this.capacity = capacity;
-        this.tableRow = Stream.iterate(1L, n -> n)
-                                .map((element) -> new TableItem())
-                                .limit(capacity + 1)
-                                .collect(Collectors.toList());
-        solve();
+    @Override
+    public List<Item> solve(ProblemInput input) {
+        return solve(input.getItems(), input.getCapacity());
     }
 
-    private TableItem updateTmpItem(Item item, int itemIndex, TableItem tmpItem, TableItem tableItem) {
-        tmpItem.value = tableItem.value + item.getValue();
-        tmpItem.weight = tableItem.weight + item.getWeight();
-        tmpItem.itemIndexes.clear();
-        tmpItem.itemIndexes.addAll(tableItem.itemIndexes);
-        tmpItem.itemIndexes.add(itemIndex);
+    @Override
+    public List<Item> solve(List<Item> items, int capacity) {
+        List<TableItem> tableRow = Stream.iterate(1L, n -> n)
+            .map((element) -> new TableItem())
+            .limit(capacity + 1)
+            .collect(Collectors.toList());
 
-        return tmpItem;
-    }
-
-    protected void solve() {
         //We use tmp row for saving intermediate values
         List<TableItem> tmpRow = Stream.iterate(1L, n -> n)
             .map((element) -> new TableItem())
@@ -56,11 +43,11 @@ public class KnapsackDP_1 {
                 TableItem tmpItem = tmpRow.get(k);
 
                 if (tableItem.weight + item.getWeight() <= k) {
-                    updateTmpItem(item, itemIndex, tmpItem, itemAux);
+                    updateTmpItem(item, tmpItem, itemAux);
                 } else {
                     itemAux = tableRow.get(k - item.getWeight());
                     if (itemAux.value + item.getValue() > tableItem.value) {
-                        updateTmpItem(item, itemIndex, tmpItem, itemAux);
+                        updateTmpItem(item, tmpItem, itemAux);
                     }
                 }
             }
@@ -71,24 +58,32 @@ public class KnapsackDP_1 {
 
                 tableItem.value = tmpItem.value;
                 tableItem.weight = tmpItem.weight;
-                tableItem.itemIndexes.clear();
-                tableItem.itemIndexes.addAll(tmpItem.itemIndexes);
+                tableItem.items.clear();
+                tableItem.items.addAll(tmpItem.items);
             }
         }
+
+        return tableRow.get(capacity).items;
     }
 
-    public List<Integer> getSolution() {
-        return tableRow.get(capacity).itemIndexes;
+    private TableItem updateTmpItem(Item item, TableItem tmpItem, TableItem tableItem) {
+        tmpItem.value = tableItem.value + item.getValue();
+        tmpItem.weight = tableItem.weight + item.getWeight();
+        tmpItem.items.clear();
+        tmpItem.items.addAll(tableItem.items);
+        tmpItem.items.add(item);
+
+        return tmpItem;
     }
 
     private static class TableItem {
 
         private int value;
         private int weight;
-        private List<Integer> itemIndexes;
+        private List<Item> items;
 
         TableItem() {
-            this.itemIndexes = new ArrayList<>();
+            this.items = new ArrayList<>();
         }
 
         TableItem(int value, int weight) {
