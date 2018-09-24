@@ -3,6 +3,7 @@ package com.khanchych.coursera.discreate.optimisation.knapsack.bb;
 import com.khanchych.coursera.discreate.optimisation.knapsack.Item;
 import com.khanchych.coursera.discreate.optimisation.knapsack.Knapsack;
 import com.khanchych.coursera.discreate.optimisation.knapsack.ProblemInput;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -32,12 +33,12 @@ public class KnapsackBB implements Knapsack {
 
         this.items = new ArrayList<>(originItems);
         itemAvailability = Stream.iterate(true, n -> n)
-            .limit(items.size())
-            .collect(Collectors.toList());
+                .limit(items.size())
+                .collect(Collectors.toList());
 
         this.capacity = capacity;
 
-        items.sort(Comparator.comparingDouble(item -> 1.0 * item.getValue() / item.getWeight()));
+        items.sort(Comparator.comparingDouble(item -> -1.0 * item.getValue() / item.getWeight()));
         bestSolution = new ArrayList<>();
         bestValue = 0;
         calcBestValue(0, itemAvailability, new NodeData(0, capacity));
@@ -64,7 +65,7 @@ public class KnapsackBB implements Knapsack {
             }
 
             calcBestValue(itemIndex + 1, itemAvailability,
-                new NodeData(data.value + item.getValue(), data.capacity - item.getWeight()));
+                    new NodeData(data.value + item.getValue(), data.capacity - item.getWeight()));
         }
 
         itemAvailability.set(itemIndex, false);
