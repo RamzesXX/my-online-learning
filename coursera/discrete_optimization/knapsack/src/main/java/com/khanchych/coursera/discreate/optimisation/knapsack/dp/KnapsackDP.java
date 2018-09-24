@@ -1,5 +1,8 @@
-package com.khanchych.coursera.discreate.optimisation.knapsack;
+package com.khanchych.coursera.discreate.optimisation.knapsack.dp;
 
+import com.khanchych.coursera.discreate.optimisation.knapsack.Item;
+import com.khanchych.coursera.discreate.optimisation.knapsack.Knapsack;
+import com.khanchych.coursera.discreate.optimisation.knapsack.ProblemInput;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -10,6 +13,9 @@ import java.util.Map;
  */
 
 public class KnapsackDP implements Knapsack {
+    private Table<WorkingTableItem> workingTable;
+    private List<Item> items;
+    private int capacity;
 
     @Override
     public List<Item> solve(ProblemInput input) {
@@ -18,7 +24,9 @@ public class KnapsackDP implements Knapsack {
 
     @Override
     public List<Item> solve(List<Item> items, int capacity) {
-        Table<WorkingTableItem> workingTable = new Table<>();
+        this.workingTable = new Table<>();
+        this.items = items;
+        this.capacity = capacity;
 
         for (int itemIndex = 0; itemIndex < items.size(); itemIndex++) {
             Item item = items.get(itemIndex);
@@ -49,10 +57,10 @@ public class KnapsackDP implements Knapsack {
             }
         }
 
-        return getSolution(workingTable, items, capacity);
+        return getSolution();
     }
 
-    private List<Item> getSolution(Table<WorkingTableItem> workingTable, List<Item> items, int capacity) {
+    private List<Item> getSolution() {
         List<Item> solution = new ArrayList<>();
         int k = workingTable.getItem(items.size() - 1, capacity).weight;
         for (int i = items.size() - 1; i >= 0; i--) {

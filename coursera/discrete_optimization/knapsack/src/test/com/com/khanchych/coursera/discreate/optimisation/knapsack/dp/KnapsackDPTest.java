@@ -1,6 +1,12 @@
-package com.khanchych.coursera.discreate.optimisation.knapsack;
+package com.khanchych.coursera.discreate.optimisation.knapsack.dp;
 
-import java.util.*;
+import com.khanchych.coursera.discreate.optimisation.knapsack.Item;
+import com.khanchych.coursera.discreate.optimisation.knapsack.Knapsack;
+import com.khanchych.coursera.discreate.optimisation.knapsack.ProblemInput;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Scanner;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;

@@ -1,5 +1,8 @@
-package com.khanchych.coursera.discreate.optimisation.knapsack;
+package com.khanchych.coursera.discreate.optimisation.knapsack.dp;
 
+import com.khanchych.coursera.discreate.optimisation.knapsack.Item;
+import com.khanchych.coursera.discreate.optimisation.knapsack.Knapsack;
+import com.khanchych.coursera.discreate.optimisation.knapsack.ProblemInput;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -11,6 +14,8 @@ import java.util.stream.Stream;
  */
 
 public class KnapsackDP_1 implements Knapsack {
+    private List<Item> items;
+    private int capacity;
 
     @Override
     public List<Item> solve(ProblemInput input) {
@@ -19,17 +24,17 @@ public class KnapsackDP_1 implements Knapsack {
 
     @Override
     public List<Item> solve(List<Item> items, int capacity) {
-        List<TableItem> tableRow = Stream.iterate(1L, n -> n)
-            .map((element) -> new TableItem())
+        List<TableItem> tableRow = Stream.iterate(new TableItem(), (element) -> new TableItem())
             .limit(capacity + 1)
             .collect(Collectors.toList());
 
         //We use tmp row for saving intermediate values
-        List<TableItem> tmpRow = Stream.iterate(1L, n -> n)
-            .map((element) -> new TableItem())
+        List<TableItem> tmpRow = Stream.iterate(new TableItem(), (element) -> new TableItem())
             .limit(capacity + 1)
             .collect(Collectors.toList());
 
+        this.items = items;
+        this.capacity = capacity;
         for (int itemIndex = 0; itemIndex < items.size(); itemIndex++) {
             Item item = items.get(itemIndex);
             // if we have capacity to take item with index itemIndex then we do
