@@ -27,46 +27,48 @@ public class KnapsackBB implements Knapsack {
 
     @Override
     public List<Item> solve(List<Item> originItems, int capacity) {
-        List<Boolean> itemAvailability = Stream.iterate(true, n -> n)
-            .limit(items.size())
-            .collect(Collectors.toList());
+        List<Boolean> itemAvailability;
         int estimation = 0;
 
         this.items = new ArrayList<>(originItems);
+        itemAvailability = Stream.iterate(true, n -> n)
+            .limit(items.size())
+            .collect(Collectors.toList());
+
         this.capacity = capacity;
 
         items.sort(Comparator.comparingDouble(item -> 1.0 * item.getValue() / item.getWeight()));
-        estimation = calcEstimation(itemAvailability);
         bestSolution = new ArrayList<>();
         bestValue = 0;
-        a(0, itemAvailability, new NodeData(0, capacity));
+        calcBestValue(0, itemAvailability, new NodeData(0, capacity));
 
         return bestSolution;
     }
 
-    private void a(int itemIndex, List<Boolean> itemAvailability, NodeData data) {
-        Item item = items.get(itemIndex);
-
-        if (data.capacity - item.getWeight() < 0) {
+    private void calcBestValue(int itemIndex, List<Boolean> itemAvailability, NodeData data) {
+        if (itemIndex >= items.size() || calcEstimation(itemAvailability) < bestValue) {
             return;
         }
 
-        if (data.value + item.getValue() > bestValue) {
-            bestSolution.clear();
-            bestValue = data.value;
-            for (int i = 0; i <= itemIndex; i++) {
-                if (itemAvailability.get(i)) {
-                    bestSolution.add(items.get(i));
+        Item item = items.get(itemIndex);
+
+        if (data.capacity >= item.getWeight()) {
+            if (data.value + item.getValue() > bestValue) {
+                bestSolution.clear();
+                bestValue = data.value + item.getValue();
+                for (int i = 0; i <= itemIndex; i++) {
+                    if (itemAvailability.get(i)) {
+                        bestSolution.add(items.get(i));
+                    }
                 }
             }
+
+            calcBestValue(itemIndex + 1, itemAvailability,
+                new NodeData(data.value + item.getValue(), data.capacity - item.getWeight()));
         }
 
-        a(itemIndex + 1, itemAvailability,
-            new NodeData(data.value + item.getValue(), data.capacity - item.getWeight()));
-
         itemAvailability.set(itemIndex, false);
-        a(itemIndex + 1, itemAvailability, new NodeData(data.value, data.capacity));
-
+        calcBestValue(itemIndex + 1, itemAvailability, new NodeData(data.value, data.capacity));
         itemAvailability.set(itemIndex, true);
     }
 
@@ -96,7 +98,6 @@ public class KnapsackBB implements Knapsack {
     }
 
     private static class NodeData {
-
         int value;
         int capacity;
 

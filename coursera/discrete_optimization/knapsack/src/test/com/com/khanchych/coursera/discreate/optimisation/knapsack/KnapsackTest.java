@@ -1,8 +1,6 @@
-package com.khanchych.coursera.discreate.optimisation.knapsack.dp;
+package com.khanchych.coursera.discreate.optimisation.knapsack;
 
-import com.khanchych.coursera.discreate.optimisation.knapsack.Item;
-import com.khanchych.coursera.discreate.optimisation.knapsack.Knapsack;
-import com.khanchych.coursera.discreate.optimisation.knapsack.ProblemInput;
+import com.khanchych.coursera.discreate.optimisation.knapsack.bb.KnapsackBB;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -11,7 +9,7 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-public class KnapsackDPTest {
+public class KnapsackTest {
     private List<Item> items;
     private int capacity;
     private Knapsack knapsack;
@@ -28,16 +26,17 @@ public class KnapsackDPTest {
             new Item(7, 3)
         );
         capacity = 10;
-        knapsack = new KnapsackDP_1();
+        knapsack = new KnapsackBB();
     }
 
     @Test
-    @Ignore
+
     public void solve() {
         System.out.println(knapsack.solve(items, capacity));
     }
 
     @Test
+    @Ignore
     public void solveFromFile() {
         ProblemInput input = getProblemFromFile("ks_19_0");
 
