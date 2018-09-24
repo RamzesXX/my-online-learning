@@ -18,13 +18,13 @@ public class KnapsackTest {
     @Before
     public void setUp() throws Exception {
         items = Arrays.asList(
-                new Item(1, 2),
-                new Item(1, 2),
-                new Item(1, 2),
-                new Item(10, 5),
-                new Item(10, 5),
-                new Item(13, 8),
-                new Item(7, 3)
+                new Item(0, 1, 2),
+                new Item(1, 1, 2),
+                new Item(2, 1, 2),
+                new Item(3, 10, 5),
+                new Item(4, 10, 5),
+                new Item(5, 13, 8),
+                new Item(6, 7, 3)
         );
         capacity = 10;
         knapsack = new KnapsackBB();
@@ -47,6 +47,7 @@ public class KnapsackTest {
     private ProblemInput getProblemFromFile(String fileName) {
         Scanner scanner = new Scanner(getClass().getClassLoader().getResourceAsStream(fileName));
         int capacity;
+        int index = 0;
         List<Item> items = new ArrayList<>();
 
         scanner.nextInt();
@@ -56,7 +57,7 @@ public class KnapsackTest {
             int value = scanner.nextInt();
             int weight = scanner.nextInt();
 
-            items.add(new Item(value, weight));
+            items.add(new Item(index++, value, weight));
         }
 
         return new ProblemInput(items, capacity);
