@@ -1,14 +1,14 @@
 package com.khanchych.coursera.discreate.optimisation.coloring;
 
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class ProblemInput {
     private int nodes;
     private int edges;
-    private Map<Integer, List<Integer>> items;
+    private Map<Integer, Set<Integer>> items;
 
-    public ProblemInput(int nodes, int edges, Map<Integer, List<Integer>> items) {
+    public ProblemInput(int nodes, int edges, Map<Integer, Set<Integer>> items) {
         this.nodes = nodes;
         this.edges = edges;
         this.items = items;
@@ -22,7 +22,7 @@ public class ProblemInput {
         return edges;
     }
 
-    public Map<Integer, List<Integer>> getItems() {
+    public Map<Integer, Set<Integer>> getItems() {
         return items;
     }
 }
