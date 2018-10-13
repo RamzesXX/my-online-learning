@@ -19,7 +19,7 @@ public class ColoringGraph implements Coloring {
         Set<Integer> usedColors = new HashSet<>();
         Set<Integer> usedByAdjacentNodesColors = new HashSet<>();
         List<Integer> orderedNodes;
-        List<Integer> nodesColors = Stream.iterate(0, n -> WITHOUT_COLOR)
+        List<Integer> nodesColors = Stream.iterate(WITHOUT_COLOR, n -> WITHOUT_COLOR)
                 .limit(items.size())
                 .collect(Collectors.toList());
 
@@ -40,7 +40,7 @@ public class ColoringGraph implements Coloring {
                 nodeColor = usedColors.size();
                 usedColors.add(nodeColor);
             } else {
-                nodeColor = availableColors.iterator().next();
+                nodeColor = Collections.min(availableColors);
             }
 
             nodesColors.set(node, nodeColor);
@@ -78,7 +78,9 @@ public class ColoringGraph implements Coloring {
         while (!toProcess.isEmpty()) {
             int element = toProcess.remove();
             if (unprocessed.contains(element)) {
-                toProcess.addAll(items.get(element));
+                List<Integer> children = new ArrayList<>(items.get(element));
+                children.sort(Comparator.comparingInt(item -> -items.get(item).size()));
+                toProcess.addAll(children);
                 unprocessed.remove(element);
                 orderedItems.add(element);
             }
