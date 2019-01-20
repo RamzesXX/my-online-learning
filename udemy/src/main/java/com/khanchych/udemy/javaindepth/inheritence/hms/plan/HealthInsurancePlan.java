@@ -1,6 +1,6 @@
 package com.khanchych.udemy.javaindepth.inheritence.hms.plan;
 
-public class HealthInsurancePlan {
+public abstract class HealthInsurancePlan {
     private double coverage;
     private InsuranceBrand offeredBy;
 
@@ -19,4 +19,6 @@ public class HealthInsurancePlan {
     public void setOfferedBy(InsuranceBrand offeredBy) {
         this.offeredBy = offeredBy;
     }
+
+    public abstract double computeMonthlyPremium(double salary);
 }

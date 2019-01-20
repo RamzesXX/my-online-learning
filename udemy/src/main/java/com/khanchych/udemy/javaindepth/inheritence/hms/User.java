@@ -1,5 +1,7 @@
 package com.khanchych.udemy.javaindepth.inheritence.hms;
 
+import com.khanchych.udemy.javaindepth.inheritence.hms.plan.HealthInsurancePlan;
+
 public class User {
 
     private long id;
@@ -7,6 +9,9 @@ public class User {
     private String lastName;
     private String gender;
     private String email;
+    private boolean insured;
+    private HealthInsurancePlan insurancePlan;
+
 
     public long getId() {
         return id;
@@ -45,5 +50,21 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public boolean isInsured() {
+        return insured;
+    }
+
+    public void setInsured(boolean insured) {
+        this.insured = insured;
+    }
+
+    public HealthInsurancePlan getInsurancePlan() {
+        return insurancePlan;
+    }
+
+    public void setInsurancePlan(HealthInsurancePlan insurancePlan) {
+        this.insurancePlan = insurancePlan;
     }
 }
