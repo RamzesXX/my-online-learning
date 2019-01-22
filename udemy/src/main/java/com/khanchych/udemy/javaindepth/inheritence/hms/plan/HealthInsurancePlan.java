@@ -20,5 +20,5 @@ public abstract class HealthInsurancePlan {
         this.offeredBy = offeredBy;
     }
 
-    public abstract double computeMonthlyPremium(double salary);
+    public abstract double computeMonthlyPremium(double salary, int age, boolean smoking);
 }
