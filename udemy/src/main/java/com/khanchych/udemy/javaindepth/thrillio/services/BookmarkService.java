@@ -1,10 +1,7 @@
 package com.khanchych.udemy.javaindepth.thrillio.services;
 
 import com.khanchych.udemy.javaindepth.thrillio.dao.BookmarkDao;
-import com.khanchych.udemy.javaindepth.thrillio.entities.Book;
-import com.khanchych.udemy.javaindepth.thrillio.entities.Bookmark;
-import com.khanchych.udemy.javaindepth.thrillio.entities.Movie;
-import com.khanchych.udemy.javaindepth.thrillio.entities.WebLink;
+import com.khanchych.udemy.javaindepth.thrillio.entities.*;
 
 public class BookmarkService {
     private static BookmarkService instance = new BookmarkService();
@@ -63,5 +60,12 @@ public class BookmarkService {
 
     public Bookmark[][] getBookmarks(){
         return dao.getBookmarks();
+    }
+
+    public void saveUserBookmark(User user, Bookmark bookmark) {
+        UserBookmark userBookmark = new UserBookmark();
+        userBookmark.setUser(user);
+        userBookmark.setBookmark(bookmark);
+        dao.saveUserBookmark(userBookmark);
     }
 }

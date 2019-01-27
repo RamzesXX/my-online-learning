@@ -11,15 +11,16 @@ import com.khanchych.udemy.javaindepth.thrillio.services.BookmarkService;
 import com.khanchych.udemy.javaindepth.thrillio.services.UserService;
 
 public class DataStore {
-    private static final int TOTAL_USER_COUNT = 5;
-    private static final int BOOKMARK_TYPES_COUNT = 3;
-    private static final int BOOKMARK_COUNT_PER_TYPE = 5;
-    private static final int USER_BOOKMARK_LIMIT = 5;
+    public static final int TOTAL_USER_COUNT = 5;
+    public static final int BOOKMARK_TYPES_COUNT = 3;
+    public static final int BOOKMARK_COUNT_PER_TYPE = 5;
+    public static final int USER_BOOKMARK_LIMIT = 5;
 
 
     private static User[] users = new User[TOTAL_USER_COUNT];
     private static Bookmark[][] bookmarks = new Bookmark[BOOKMARK_TYPES_COUNT][BOOKMARK_COUNT_PER_TYPE];
     private static UserBookmark[] userBookmarks = new UserBookmark[TOTAL_USER_COUNT * USER_BOOKMARK_LIMIT];
+    private static int bookmarkIndex = 0;
 
     public static User[] getUsers() {
         return users;
@@ -68,4 +69,7 @@ public class DataStore {
         bookmarks[2][4] = BookmarkService.getInstance().createBook(4004, "Effective Java Programming Language Guide", 2007, "Prentice Hall", new String[]{"Joshua Bloch"}, BookGenre.TECHNICAL, 4.9);
     }
 
+    public static void add(UserBookmark userBookmark) {
+        userBookmarks[bookmarkIndex++] = userBookmark;
+    }
 }
