@@ -1,5 +1,7 @@
 package com.khanchych.udemy.javaindepth.thrillio.entities;
 
+import com.khanchych.udemy.javaindepth.thrillio.constants.BookGenre;
+
 import java.util.Arrays;
 
 public class Book extends Bookmark {
@@ -58,5 +60,14 @@ public class Book extends Bookmark {
                 ", genre='" + genre + '\'' +
                 ", amazonRating=" + amazonRating +
                 '}';
+    }
+
+    @Override
+    public boolean isKidFriendlyEligible() {
+        if (getGenre().equals(BookGenre.PHILOSOPHY) || getGenre().equals(BookGenre.SELF_HELP)) {
+            return false;
+        }
+
+        return true;
     }
 }

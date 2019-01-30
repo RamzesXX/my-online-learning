@@ -1,9 +1,12 @@
 package com.khanchych.udemy.javaindepth.thrillio.entities;
 
+import static com.khanchych.udemy.javaindepth.thrillio.constants.KidFriendlyStatus.*;
+
 public abstract class Bookmark {
     private long id;
     private String title;
     private String profileUrl;
+    private String kidFriendlyStatus = UNKNOWN;
 
     public long getId() {
         return id;
@@ -28,4 +31,6 @@ public abstract class Bookmark {
     public void setProfileUrl(String profileUrl) {
         this.profileUrl = profileUrl;
     }
+
+    public abstract boolean isKidFriendlyEligible();
 }
