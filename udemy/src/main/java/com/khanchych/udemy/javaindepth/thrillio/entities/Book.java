@@ -1,10 +1,11 @@
 package com.khanchych.udemy.javaindepth.thrillio.entities;
 
+import com.khanchych.udemy.javaindepth.inheritence.thrill.Sharable;
 import com.khanchych.udemy.javaindepth.thrillio.constants.BookGenre;
 
 import java.util.Arrays;
 
-public class Book extends Bookmark {
+public class Book extends Bookmark implements Sharable {
     private int publicationYear;
     private String publisher;
     private String[] authors;
@@ -69,5 +70,18 @@ public class Book extends Bookmark {
         }
 
         return true;
+    }
+
+    @Override
+    public String getItemData() {
+        StringBuilder builder = new StringBuilder();
+
+        builder.append("<item>");
+        builder.append("<type>Book</type>");
+        builder.append("<title>").append(getTitle()).append("</title>");
+        builder.append("<publisher>").append(getPublisher()).append("</publisher>");
+        builder.append("</item>");
+
+        return builder.toString();
     }
 }

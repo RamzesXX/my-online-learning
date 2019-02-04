@@ -15,7 +15,7 @@ public class BookmarkService {
     }
 
     public Movie createMovie(long id, String title, /*String profileUrl, */int releaseYear,
-            String[] cast, String[] directors, String genre, double imdbRating) {
+                             String[] cast, String[] directors, String genre, double imdbRating) {
         Movie movie = new Movie();
 
         movie.setId(id);
@@ -58,7 +58,7 @@ public class BookmarkService {
         return webLink;
     }
 
-    public Bookmark[][] getBookmarks(){
+    public Bookmark[][] getBookmarks() {
         return dao.getBookmarks();
     }
 
@@ -67,5 +67,11 @@ public class BookmarkService {
         userBookmark.setUser(user);
         userBookmark.setBookmark(bookmark);
         dao.saveUserBookmark(userBookmark);
+    }
+
+    public void setKidFriendlyStatus(User user, String kidFriendlyStatus, Bookmark bookmark) {
+        bookmark.setKidFriendlyStatus(kidFriendlyStatus);
+        bookmark.setKidFriendlyMarkedBy(user);
+        System.out.println("Kid Friendly Status: " + kidFriendlyStatus + "," + bookmark);
     }
 }
