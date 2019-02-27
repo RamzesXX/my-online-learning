@@ -11,7 +11,7 @@ public class SimpleUnitTester {
 
         for (Method method: clazz.getDeclaredMethods()) {
             if (method.getName().startsWith("test") && method.getReturnType() == boolean.class) {
-                if (!(Boolean) method.invoke(instance)) {
+                if (!(boolean) method.invoke(instance)) {
                     failedCount++;
                 }
             }
