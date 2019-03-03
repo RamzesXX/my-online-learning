@@ -32,7 +32,7 @@ public class ExceptionDemo {
             throw e;
         } catch (IOException e) {
             System.out.println("Connecting to a different server ...");
-        } //catch (APIFormatChangeException e) {
+        } catch (APIFormatChangeException e) {
             // Item 65: Donít ignore exceptions
 //            e.printStackTrace();
 
@@ -45,7 +45,7 @@ public class ExceptionDemo {
 
             // Item 61: Throw exceptions appropriate to the abstraction
             //e.getCause().printStackTrace();
-//        }
+        }
         finally {
             System.out.println("Inside share's finally ...");
         }

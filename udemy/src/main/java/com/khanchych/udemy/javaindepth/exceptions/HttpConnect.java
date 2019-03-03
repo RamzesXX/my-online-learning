@@ -24,8 +24,8 @@ public class HttpConnect {
         if (destination == 0){
             throw new FileNotFoundException();
         } else if (destination == 1) {
-            //throw new IOException();
-            response = "<result><code>success</code></result>";
+            throw new IOException();
+//            response = "<result><code>success</code></result>";
         }
 
         System.out.println("\nEnd of send ...");
