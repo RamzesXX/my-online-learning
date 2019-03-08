@@ -10,11 +10,13 @@ import java.util.Objects;
 public class IO {
     public static void main(String[] args) throws IOException, URISyntaxException {
         // loadResponsesByUrlFromStream(new BufferedReader(new InputStreamReader(System.in, "UTF-8")));
-        fileDemo();
+//        fileDemo();
+        File file = new File("/home/../etc");
+        System.out.println(file.getName());
     }
 
     private static void fileDemo() {
-        File file = new File("/");
+        File file = new File("/home/../etc");
         System.out.println(file);
     }
 
