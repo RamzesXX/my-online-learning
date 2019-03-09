@@ -1,11 +1,25 @@
 package com.khanchych.udemy.javaindepth.io;
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class IODemo {
     static String inFileStr = "walden.jpg";
     static String outFileStr = "walden-out.jpg";
+
+    // By convention, static nested classes should be placed before static methods
+    public static class SerializableDemo implements Serializable {
+        //static final long serialVersionUID = 8882416210786165012L;
+        private String name;
+        public String getName() { return name; }
+        public void setName(String name) { this.name = name; }
+
+        private transient int id = 4;
+        public int getId() { return id; }
+
+        //private String gender;
+    }
 
     public static void fileCopyNoBuffer() {
         System.out.println("\nInside fileCopyNoBuffer ...");
@@ -104,7 +118,7 @@ public class IODemo {
     public static void fileMethodsDemo() {
         System.out.println("\nInside fileMethodsDemo ...");
 
-        File f = new File("/etc/passwd"); // "movies\\movies.txt" also works
+        File f = new File("C:\\jid\\demo\\src\\..\\walden.jpg"); // "movies\\movies.txt" also works
         //File f = new File("walden.jpg");
 
         System.out.println("getAbsolutePath(): " + f.getAbsolutePath());
@@ -152,12 +166,84 @@ public class IODemo {
             System.out.println(dirItem);
     }
 
+    /**
+     * Internally in memory Java always stores a char as UTF-16. Period.
+     */
+
+
+
+    public static void applyEncoding() {
+        System.out.println("\nInside applyEncoding ...");
+        //System.out.println("Default Character Encoding: " + System.getProperty("file.encoding"));
+
+        // Ensure Eclipse property is set as UTF8
+        printEncodingDetails("luke");
+        printEncodingDetails("€"); // Euro (Reference: http://stackoverflow.com/questions/34922333/how-does-java-fit-a-3-byte-unicode-character-into-a-char-type)
+        printEncodingDetails("\u1F602"); // Non-BMP Unicode Code Point ~ Tears of Joy Emoji (one of Smiley graphic symbol)
+    }
+    private static void printEncodingDetails(String symbol) {
+        System.out.println("\nSymbol: " + symbol);
+        try {
+            System.out.println("ASCII: " + Arrays.toString(symbol.getBytes("US-ASCII")));
+            System.out.println("ISO-8859-1: " + Arrays.toString(symbol.getBytes("ISO-8859-1")));
+            System.out.println("UTF-8: " + Arrays.toString(symbol.getBytes("UTF-8")));
+            System.out.println("UTF-16: " + Arrays.toString(symbol.getBytes("UTF-16")));
+            System.out.println("UTF-16 BE: " + Arrays.toString(symbol.getBytes("UTF-16BE")));
+            System.out.println("UTF-16 LE: " + Arrays.toString(symbol.getBytes("UTF-16LE")));
+        } catch (UnsupportedEncodingException e1) {
+            e1.printStackTrace();
+        }
+    }
+
+    public void doSerialization() {
+        System.out.println("\nInside doSerialization ...");
+
+        SerializableDemo serializableDemo = new SerializableDemo();
+        serializableDemo.setName("Java");
+        System.out.println("name (before serialization): " + serializableDemo.getName());
+        System.out.println("id (before serialization): " + serializableDemo.getId());
+
+        try (ObjectOutputStream out = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream("serial.ser")))) {
+            out.writeObject(serializableDemo);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void doDeserialization() {
+        System.out.println("\nInside doDeserialization ...");
+
+        try (ObjectInputStream in = new ObjectInputStream(new BufferedInputStream(new FileInputStream("serial.ser")))) {
+            SerializableDemo serializedObj = (SerializableDemo) in.readObject();
+            System.out.println("name (after deserialization): " + serializedObj.getName());
+            System.out.println("id (after deserialization): " + serializedObj.getId());
+        } catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
     public static void main(String[] args) {
         //fileCopyNoBuffer();
         //fileCopyWithBufferAndArray();
         //readFromStandardInput();
-        fileMethodsDemo();
-//        dirFilter(true);
+        //fileMethodsDemo();
+        //dirFilter(true);
+        //applyEncoding();
+
+        // Serialization
+        if (args.length > 0 && args[0].equals("true")) {
+            new IODemo().doSerialization();
+        }
+        new IODemo().doDeserialization();
     }
 }
 

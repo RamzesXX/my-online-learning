@@ -11,8 +11,22 @@ public class IO {
     public static void main(String[] args) throws IOException, URISyntaxException {
         // loadResponsesByUrlFromStream(new BufferedReader(new InputStreamReader(System.in, "UTF-8")));
 //        fileDemo();
-        File file = new File("/home/../etc");
-        System.out.println(file.getName());
+//        File file = new File("/home/../etc");
+        byte[] array;
+        try (
+                ByteArrayOutputStream os = new ByteArrayOutputStream();
+                ObjectOutput oos = new ObjectOutputStream(os)) {
+            oos.writeObject("Hello world!");
+            array = os.toByteArray();
+        }
+        try (
+                ByteArrayInputStream is = new ByteArrayInputStream(array);
+                ObjectInput ois = new ObjectInputStream(is)) {
+            System.out.println((String)ois.readObject());
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+//        System.out.println(file.getName());
     }
 
     private static void fileDemo() {
