@@ -3,11 +3,15 @@ package com.khanchych.leetcode;
 import java.util.Arrays;
 
 /**
- * There is array which contains positive integer numbers
- * Find 2 indices which form container that can contains max volume of water
- * (i, a[i]) (i, 0) (j,0) (j, a[j])
+ * 11. Container With Most Water
+ *
+ * Given n non-negative integers a1, a2, ..., an , where each represents a point at coordinate (i, ai).
+ * n vertical lines are drawn such that the two endpoints of line i is at (i, ai) and (i, 0).
+ * Find two lines, which together with x-axis forms a container, such that the container contains the most water.
+ *
+ * Note: You may not slant the container and n is at least 2.
  */
-public class TaskXXXX {
+public class Task11 {
 
     public int[] solve(int[] dots) {
         int left = 0;
@@ -61,7 +65,7 @@ public class TaskXXXX {
     }
 
     public static void main(String[] args) {
-        TaskXXXX task = new TaskXXXX();
+        Task11 task = new Task11();
         int[] data;
 
         data = new int[]{500, 2, 50, 700, 1100, 100, 3};

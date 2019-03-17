@@ -6,11 +6,11 @@ import org.junit.Test;
 import static org.junit.Assert.assertArrayEquals;
 
 public class TaskXXXXTest {
-    private TaskXXXX task;
+    private Task11 task;
 
     @Before
     public void setUp() throws Exception {
-        this.task = new TaskXXXX();
+        this.task = new Task11();
     }
 
     @Test
