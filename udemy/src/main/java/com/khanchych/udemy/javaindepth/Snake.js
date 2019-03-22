@@ -1,3 +1,26 @@
+class Component extends React.Component {
+    componentDidMount() {
+        this.updateCanvas();
+    }
+
+    updateCanvas() {
+        const ctx = this.refs.canvas.getContext('2d');
+        for (let x = 0; x < size; x++) {
+            for (let y = 0; y < size; y++) {
+                ctx.strokeRect(this.props.squareSize * x + 1, this.props.squareSize * y +1, this.props.squareSize - 2, this.props.squareSize-2);
+            }
+        }
+        this.props.body.forEach(value => ctx.fillRect(squareSize * value.x + 1, squareSize * value.y +1, squareSize - 2, squareSize-2))
+    }
+
+    render() {
+        return (
+            <canvas ref="canvas" width={300} height={300}/>
+        );
+    }
+}
+ReactDOM.render(<CanvasComponent/>, document.getElementById('container'));
+
 const FIELD_SIZE = 10;
 const MAX_SPEED = 10;
 
