@@ -6,9 +6,11 @@ import com.khanchych.udemy.javaindepth.thrillio.entities.User;
 import com.khanchych.udemy.javaindepth.thrillio.services.BookmarkService;
 import com.khanchych.udemy.javaindepth.thrillio.services.UserService;
 
+import java.util.List;
+
 public class Launch {
-    private static User[] users;
-    private static Bookmark[][] bookmarks;
+    private static List<User> users;
+    private static List<List<Bookmark>> bookmarks;
 
     private static void loadData() {
         System.out.println("1. Loading Data");
@@ -23,7 +25,7 @@ public class Launch {
     }
 
     private static void printBookMarkData() {
-        for (Bookmark[] bookmarkList :bookmarks) {
+        for (List<Bookmark> bookmarkList :bookmarks) {
             for (Bookmark bookmark: bookmarkList) {
                 System.out.println(bookmark);
             }

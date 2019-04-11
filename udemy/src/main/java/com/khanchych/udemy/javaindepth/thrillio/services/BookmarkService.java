@@ -7,6 +7,7 @@ import com.khanchych.udemy.javaindepth.thrillio.util.IOUtil;
 
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
+import java.util.List;
 
 public class BookmarkService {
     private static BookmarkService instance = new BookmarkService();
@@ -59,7 +60,7 @@ public class BookmarkService {
 
     }
 
-    public Bookmark[][] getBookmarks() {
+    public List<List<Bookmark>> getBookmarks() {
         return dao.getBookmarks();
     }
 

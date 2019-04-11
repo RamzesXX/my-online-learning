@@ -3,6 +3,8 @@ package com.khanchych.udemy.javaindepth.thrillio.services;
 import com.khanchych.udemy.javaindepth.thrillio.dao.UserDao;
 import com.khanchych.udemy.javaindepth.thrillio.entities.User;
 
+import java.util.List;
+
 public class UserService {
     private static UserService instance = new UserService();
     private static UserDao dao = new UserDao();
@@ -28,7 +30,7 @@ public class UserService {
         return user;
     }
 
-    public User[] getUsers() {
+    public List<User> getUsers() {
         return dao.getUsers();
     }
 }

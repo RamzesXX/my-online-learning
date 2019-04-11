@@ -5,23 +5,20 @@ import com.khanchych.udemy.javaindepth.thrillio.controllers.BookmarkController;
 import com.khanchych.udemy.javaindepth.thrillio.entities.Bookmark;
 import com.khanchych.udemy.javaindepth.thrillio.entities.User;
 
+import java.util.List;
+
 import static com.khanchych.udemy.javaindepth.thrillio.constants.KidFriendlyStatus.*;
 
 public class View {
-    public static void browse(User user, Bookmark[][] bookmarks) {
+    public static void browse(User user, List<List<Bookmark>> bookmarks) {
         System.out.println("\n" + user.getEmail() + " is browsing items ...");
 
-        int bookmarkCount = 0;
-
-        for (Bookmark[] bookmarkList : bookmarks) {
+        for (List<Bookmark> bookmarkList : bookmarks) {
             for (Bookmark bookmark : bookmarkList) {
-                if (bookmarkCount < DataStore.USER_BOOKMARK_LIMIT) {
-                    boolean isBookmarked = getBookmarkDecision(bookmark);
-                    if (isBookmarked) {
-                        bookmarkCount++;
-                        BookmarkController.getInstance().saveUserBookmark(user, bookmark);
-                        System.out.println("New Item Bookmarked --- " + bookmark);
-                    }
+                boolean isBookmarked = getBookmarkDecision(bookmark);
+                if (isBookmarked) {
+                    BookmarkController.getInstance().saveUserBookmark(user, bookmark);
+                    System.out.println("New Item Bookmarked --- " + bookmark);
                 }
                 if((user.getUserType().equals(UserType.EDITOR) || user.getUserType().equals(UserType.CHIEF_EDITOR))
                         && bookmark.isKidFriendlyEligible()
