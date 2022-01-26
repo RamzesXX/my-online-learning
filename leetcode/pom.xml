@@ -7,6 +7,18 @@
     <groupId>com.khanchych.online_learning</groupId>
     <artifactId>leetcode</artifactId>
     <version>1.0</version>
-    <packaging>pom</packaging>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>RELEASE</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+    <properties>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+    </properties>
 
 </project>
